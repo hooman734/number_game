@@ -1,0 +1,68 @@
+﻿@page "/"
+@inject GameDataHelper GameDataHelper
+
+
+<div class="container" xmlns="http://www.w3.org/1999/html">
+    <h1>Vihan Number Game!</h1>
+    <br />
+    @* <HxButton Color="ThemeColor.Success"Icon="BootstrapIcon.Award" OnClick="() => _generalSeed+=10">Refresh!</HxButton> *@
+    <br />
+    <br />
+    <div class="col">
+
+        @{
+            System.Diagnostics.Debug.Assert(_game != null, nameof(_game) + " != null");
+        }
+        @foreach (var question in _game)
+        {
+            <br />
+            <div class="row">
+                <h3><span>@question.Item1.Item1</span> @(question.Item2 == GameDataHelper.Op.Add ? '+' : '-') <span>@question.Item1.Item2</span> = ?</h3>
+                <h6>Answers:</h6>
+                <HxButtonGroup>
+                    @foreach (var option in question.Item3)
+                    {
+                        <HxButton OnClickStopPropagation="true" OnClickPreventDefault="true" Size="ButtonSize.Large" Text="@option.ToString()" Color="ThemeColor.Secondary" Outline="true" OnClick="() => IfWins(option, question.Item1.Item3)"/>
+                    }
+                </HxButtonGroup>
+            </div>
+        }
+    </div>
+</div>
+
+
+@if (_correct)
+{
+    <audio autoplay><source src="Sounds/applause.wav"/></audio>
+}
+@if (_incorrect)
+{
+    <audio autoplay><source src="Sounds/incorrect.wav"/></audio>
+}
+
+
+@code{
+
+    private bool _correct = false;
+    private bool _incorrect = false;
+    private IEnumerable<((int, int, int), GameDataHelper.Op, List<int>)>? _game;
+
+
+    protected override void OnInitialized()
+    {
+        _game = GameDataHelper.MakeQuestion();
+    }
+
+
+    private void IfWins(int answer, int check)
+    {
+        if (answer == check)
+        {
+            _correct = true;
+        }
+        else
+        {
+            _incorrect = true;
+        }
+    }
+}
