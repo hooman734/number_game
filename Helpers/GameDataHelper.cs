@@ -8,14 +8,26 @@ public class GameDataHelper
         Sub = 2
     }
 
-    private readonly int _numberOfQuestions = 3;
-    private readonly int _limit = 20;
-    private readonly int _numberOfDistractedAnswers = 4;
-    private static int _generalSeed = DateOnly.FromDateTime(DateTime.Now).DayNumber;
-
+    public struct Game
+    { 
+        public (int, int, int) Operands;
+        public Op Op;
+        public List<int> Options;
+    }
+    
+    private int _limit;
+    private int _numberOfDistractedAnswers;
+    private static readonly int GeneralSeed = DateOnly.FromDateTime(DateTime.Now).DayNumber;
+    
+    public void Setup(int limit, int otherQuestions)
+    {
+        _limit = limit;
+        _numberOfDistractedAnswers = otherQuestions;
+    }
+    
     private (int, int, int) OperandGenerator(Op op, int seed)
     {
-        var rnd = new Random(_generalSeed + (int) op + seed);
+        var rnd = new Random(GeneralSeed + (int) op + seed);
         var operand1 = rnd.Next(_limit);
         var operand2 = rnd.Next(_limit);
         if (op is Op.Sub && operand1 < operand2)
@@ -31,7 +43,7 @@ public class GameDataHelper
 
     private List<int> AnswerOptions(int answer)
     {
-        var rnd = new Random(_generalSeed);
+        var rnd = new Random(GeneralSeed);
         List<int> distractedItems = new() { answer };
         for (int idx = 0; idx < _numberOfDistractedAnswers; idx++)
         {
@@ -55,13 +67,14 @@ public class GameDataHelper
         return result;
     }
 
-    public IEnumerable<((int, int, int), Op, List<int>)>? MakeQuestion()
+    public IEnumerable<Game>? MakeQuestion(int numberOfQuestions)
     {
-        foreach (var questionItem in Enumerable.Range(0, _numberOfQuestions))
+        for (var i = 0; i < numberOfQuestions; i++)
         {
             var seed = (new Random()).Next(20);
             var operation = (new Random()).Next(2) > 0 ? Op.Add : Op.Sub;
-            yield return (OperandGenerator(operation, seed), operation, AnswerOptions(OperandGenerator(operation, seed).Item3));
+            var operands = OperandGenerator(operation, seed);
+            yield return new Game { Operands = operands, Op = operation, Options = AnswerOptions(operands.Item3) };   
         }
     }
 }

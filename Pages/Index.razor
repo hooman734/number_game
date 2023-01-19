@@ -17,12 +17,12 @@
         {
             <br />
             <div class="row">
-                <h3><span>@question.Item1.Item1</span> @(question.Item2 == GameDataHelper.Op.Add ? '+' : '-') <span>@question.Item1.Item2</span> = ?</h3>
+                <h3><span>@question.Operands.Item1</span> @(question.Op == GameDataHelper.Op.Add ? '+' : '-') <span>@question.Operands.Item2</span> = ?</h3>
                 <h6>Answers:</h6>
                 <HxButtonGroup>
-                    @foreach (var option in question.Item3)
+                    @foreach (var option in question.Options)
                     {
-                        <HxButton OnClickStopPropagation="true" OnClickPreventDefault="true" Size="ButtonSize.Large" Text="@option.ToString()" Color="ThemeColor.Secondary" Outline="true" OnClick="() => IfWins(option, question.Item1.Item3)"/>
+                        <HxButton OnClickStopPropagation="true" OnClickPreventDefault="true" Size="ButtonSize.Large" Text="@option.ToString()" Color="ThemeColor.Secondary" Outline="true" OnClick="() => IfWins(option, question.Operands.Item3)"/>
                     }
                 </HxButtonGroup>
             </div>
@@ -45,15 +45,15 @@
 
     private bool _correct = false;
     private bool _incorrect = false;
-    private IEnumerable<((int, int, int), GameDataHelper.Op, List<int>)>? _game;
-
+    private List<GameDataHelper.Game>? _game;
+    private const int NumberOfQuestions = 7;
 
     protected override void OnInitialized()
     {
-        _game = GameDataHelper.MakeQuestion();
+        GameDataHelper.Setup(20, 4);
+        _game = GameDataHelper?.MakeQuestion(NumberOfQuestions)?.ToList();
     }
-
-
+    
     private void IfWins(int answer, int check)
     {
         if (answer == check)
