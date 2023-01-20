@@ -12,7 +12,7 @@ public class GameDataHelper
     { 
         public (int, int, int) Operands;
         public Op Op;
-        public List<int> Options;
+        public List<int>? Options;
     }
     
     private int _limit;
