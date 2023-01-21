@@ -94,11 +94,11 @@ public class GameDataHelper
         for (var i = 0; i < numberOfQuestions; i++)
         {
             var seed = (new Random()).Next(20);
-            var operation = (new Random().Next(8)) switch
+            var operation = (new Random().Next(16)) switch
             {
-                <= 2 => Op.Greater,
-                <= 4 => Op.Smaller,
-                <= 6 => Op.Sub,
+                <= 5 => Op.Greater,
+                <= 8 => Op.Smaller,
+                <= 11 => Op.Sub,
                 _  => Op.Add,
             };
             var (operand1, operand2, answer) = OperandGenerator(operation, seed);

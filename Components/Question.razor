@@ -3,7 +3,7 @@
 
 <HxCard CssClass="@_theme" style="max-width: 18rem;">
     <HeaderTemplate>
-         <h3><span>@Q.Operands.Item1</span> @(Q.Op == GameDataHelper.Op.Add ? '+' : (Q.Op == GameDataHelper.Op.Sub ? '-' : (Q.Op == GameDataHelper.Op.Greater ? '>' : '<'))) <span>@Q.Operands.Item2</span> = ?</h3>
+         <h3><span>@Q.Operands.Item1</span> @(Q.Op == GameDataHelper.Op.Add ? '+' : (Q.Op == GameDataHelper.Op.Sub ? '-' : (Q.Op == GameDataHelper.Op.Greater ? '>' : '<'))) <span>@Q.Operands.Item2</span> = @(_tried ? Q.Answer : '?')</h3>
     </HeaderTemplate>
 	<BodyTemplate>
 		<div class="container">
@@ -11,7 +11,7 @@
             <HxButtonGroup>
                 @foreach (var option in Q.Options!)
                 {
-                    <HxButton OnClickStopPropagation="true" OnClickPreventDefault="true" Size="ButtonSize.Large" Text="@option" Color="ThemeColor.Dark" Outline="false" OnClick="() => IfWins(option, Q.Answer)"/>
+                    <HxButton OnClickStopPropagation="true" OnClickPreventDefault="true" Size="ButtonSize.Large" Text="@option" Color="ThemeColor.Light" Outline="false" OnClick="() => IfWins(option, Q.Answer)"/>
                 }
             </HxButtonGroup>
         </div>
