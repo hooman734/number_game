@@ -1,30 +1,49 @@
 
 <Ding Correct="_correct" Incorrect="_incorrect"/>
-<div class="container">
-    <h3><span>@Q.Operands.Item1</span> @(Q.Op == GameDataHelper.Op.Add ? '+' : (Q.Op == GameDataHelper.Op.Sub ? '-' : (Q.Op == GameDataHelper.Op.Greater ? '>' : '<'))) <span>@Q.Operands.Item2</span> = ?</h3>
-    <h6>Answers:</h6>
-    <HxButtonGroup>
-        @foreach (var option in Q.Options!)
-        {
-            <HxButton OnClickStopPropagation="true" OnClickPreventDefault="true" Size="ButtonSize.Large" Text="@option.ToString()" Color="ThemeColor.Secondary" Outline="true" OnClick="() => IfWins(option, Q.Answer)"/>
-        }
-    </HxButtonGroup>
-</div>
+
+<HxCard CssClass="@_theme" style="max-width: 18rem;">
+    <HeaderTemplate>
+         <h3><span>@Q.Operands.Item1</span> @(Q.Op == GameDataHelper.Op.Add ? '+' : (Q.Op == GameDataHelper.Op.Sub ? '-' : (Q.Op == GameDataHelper.Op.Greater ? '>' : '<'))) <span>@Q.Operands.Item2</span> = ?</h3>
+    </HeaderTemplate>
+	<BodyTemplate>
+		<div class="container">
+            <h6>Answers:</h6>
+            <HxButtonGroup>
+                @foreach (var option in Q.Options!)
+                {
+                    <HxButton OnClickStopPropagation="true" OnClickPreventDefault="true" Size="ButtonSize.Large" Text="@option" Color="ThemeColor.Dark" Outline="false" OnClick="() => IfWins(option, Q.Answer)"/>
+                }
+            </HxButtonGroup>
+        </div>
+	</BodyTemplate>
+</HxCard>
 
 @code {
     [Parameter]
     public GameDataHelper.Game Q { get; set; }
+    
+    [Parameter]
+    public EventCallback<bool> DidAnswer { get; set; }
+    
     private bool _correct = false, _incorrect = false;
+    private string _theme = "bg-primary  text-white mb-3";
+    private bool _tried = false;
 
-    private void IfWins(string answer, string check)
+    private async Task IfWins(string answer, string check)
     {
+        if (_tried) return;
+        _tried = true;
         if (answer == check)
         {
             _correct = true;
+            _theme = "bg-success text-white mb-3";
+            await DidAnswer.InvokeAsync(true);
         }
         else
         {
             _incorrect = true;
+            _theme = "bg-danger text-white mb-3";
+            await DidAnswer.InvokeAsync(false);
         }
     }
 }

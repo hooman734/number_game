@@ -5,6 +5,8 @@
 <div class="container" xmlns="http://www.w3.org/1999/html">
     <h1>Vihan Number Game!</h1>
     <br />
+    <h4>Your Score is : @_score</h4>
+    <br />
     @* <HxButton Color="ThemeColor.Success"Icon="BootstrapIcon.Award" OnClick="() => _generalSeed+=10">Refresh!</HxButton> *@
     <br />
     <br />
@@ -14,7 +16,7 @@
         {
             <div class="col">
                  <br/>
-                       <Question Q="question"/>
+                       <Question Q="question" DidAnswer="ResolveResult"/>
                  <br/>
             </div>
         }
@@ -26,11 +28,19 @@
     
     private List<GameDataHelper.Game>? _game;
     private const int NumberOfQuestions = 30;
+    private int _score = 0;
 
     protected override void OnInitialized()
     {
         GameDataHelper.Setup(25, 4);
         _game = GameDataHelper?.MakeQuestion(NumberOfQuestions)?.ToList();
     }
-    
+
+    private void ResolveResult(bool r)
+    {
+        if (r)
+        {
+            _score++;
+        }
+    }
 }
