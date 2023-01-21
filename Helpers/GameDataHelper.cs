@@ -1,3 +1,5 @@
+using System.Data.SqlTypes;
+
 namespace number_game.Helpers;
 
 public class GameDataHelper
@@ -5,14 +7,19 @@ public class GameDataHelper
     public enum Op
     {
         Add = 1,
-        Sub = 2
+        Sub = 2,
+        Greater = 3,
+        Smaller = 4,
+        Times = 5,
+        Divide = 6,
     }
 
     public struct Game
     { 
-        public (int, int, int) Operands;
+        public (int, int) Operands;
+        public string Answer;
         public Op Op;
-        public List<int>? Options;
+        public List<string>? Options;
     }
     
     private int _limit;
@@ -25,7 +32,7 @@ public class GameDataHelper
         _numberOfDistractedAnswers = otherQuestions;
     }
     
-    private (int, int, int) OperandGenerator(Op op, int seed)
+    private (int, int, string) OperandGenerator(Op op, int seed)
     {
         var rnd = new Random(GeneralSeed + (int) op + seed);
         var operand1 = rnd.Next(_limit);
@@ -35,21 +42,36 @@ public class GameDataHelper
             (operand1, operand2) = (operand2, operand1);
         }
         var answer = op switch {
-            Op.Add => operand1 + operand2,
-            Op.Sub => operand1 - operand2,
+            Op.Add => (operand1 + operand2).ToString(),
+            Op.Sub => (operand1 - operand2).ToString(),
+            Op.Greater => (operand1 > operand2).ToString(),
+            Op.Smaller => (operand1 < operand2).ToString(),
             _ => throw new ArgumentOutOfRangeException(nameof(op), op, null)};
         return (operand1, operand2, answer);
     }
 
-    private List<int> AnswerOptions(int answer)
+    private List<string> AnswerOptions<T>(T answer)
     {
         var rnd = new Random(GeneralSeed);
-        List<int> distractedItems = new() { answer };
-        for (int idx = 0; idx < _numberOfDistractedAnswers; idx++)
+        List<string> distractedItems = new();
+
+        try
         {
-            distractedItems.Add(answer + rnd.Next(_limit) - _limit / 2);
+            var intAnswer = Convert.ToInt32(answer);
+            distractedItems.Add(intAnswer.ToString());
+            for (var idx = 0; idx < _numberOfDistractedAnswers; idx++)
+            {
+                distractedItems.Add((rnd.Next(_limit) + intAnswer - _limit / 2).ToString());
+            }
+
+            return Shuffle(distractedItems.Distinct().ToList());
         }
-        return Shuffle(distractedItems.Distinct().ToList());
+        catch
+        {
+            (distractedItems as List<string>)!.Add("True");
+            (distractedItems as List<string>)!.Add("False");
+            return Shuffle(distractedItems.Distinct().ToList());
+        }
     }
 
     private List<T> Shuffle<T>(List<T> input)
@@ -72,9 +94,15 @@ public class GameDataHelper
         for (var i = 0; i < numberOfQuestions; i++)
         {
             var seed = (new Random()).Next(20);
-            var operation = (new Random()).Next(2) > 0 ? Op.Add : Op.Sub;
-            var operands = OperandGenerator(operation, seed);
-            yield return new Game { Operands = operands, Op = operation, Options = AnswerOptions(operands.Item3) };   
+            var operation = (new Random().Next(8)) switch
+            {
+                <= 2 => Op.Greater,
+                <= 4 => Op.Smaller,
+                <= 6 => Op.Sub,
+                _  => Op.Add,
+            };
+            var (operand1, operand2, answer) = OperandGenerator(operation, seed);
+            yield return new Game { Operands = (operand1, operand2), Answer = answer, Op = operation, Options = AnswerOptions(answer) };   
         }
     }
 }

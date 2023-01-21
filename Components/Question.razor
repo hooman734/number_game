@@ -1,12 +1,12 @@
 
 <Ding Correct="_correct" Incorrect="_incorrect"/>
-<div class="container-fluid">
-    <h3><span>@Q.Operands.Item1</span> @(Q.Op == GameDataHelper.Op.Add ? '+' : '-') <span>@Q.Operands.Item2</span> = ?</h3>
+<div class="container">
+    <h3><span>@Q.Operands.Item1</span> @(Q.Op == GameDataHelper.Op.Add ? '+' : (Q.Op == GameDataHelper.Op.Sub ? '-' : (Q.Op == GameDataHelper.Op.Greater ? '>' : '<'))) <span>@Q.Operands.Item2</span> = ?</h3>
     <h6>Answers:</h6>
     <HxButtonGroup>
         @foreach (var option in Q.Options!)
         {
-            <HxButton OnClickStopPropagation="true" OnClickPreventDefault="true" Size="ButtonSize.Large" Text="@option.ToString()" Color="ThemeColor.Secondary" Outline="true" OnClick="() => IfWins(option, Q.Operands.Item3)"/>
+            <HxButton OnClickStopPropagation="true" OnClickPreventDefault="true" Size="ButtonSize.Large" Text="@option.ToString()" Color="ThemeColor.Secondary" Outline="true" OnClick="() => IfWins(option, Q.Answer)"/>
         }
     </HxButtonGroup>
 </div>
@@ -16,7 +16,7 @@
     public GameDataHelper.Game Q { get; set; }
     private bool _correct = false, _incorrect = false;
 
-    private void IfWins(int answer, int check)
+    private void IfWins(string answer, string check)
     {
         if (answer == check)
         {
@@ -27,5 +27,4 @@
             _incorrect = true;
         }
     }
-
 }
