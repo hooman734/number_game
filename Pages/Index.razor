@@ -10,24 +10,32 @@
     @* <HxButton Color="ThemeColor.Success"Icon="BootstrapIcon.Award" OnClick="() => _generalSeed+=10">Refresh!</HxButton> *@
     <br />
     <br />
-    <div class="row">
-        
-        @foreach (var question in _game!)
+    @if (_score > 0.5 * NumberOfQuestions)
         {
-            <div class="col">
-                 <br/>
-                       <Question Q="question" DidAnswer="ResolveResult"/>
-                 <br/>
-            </div>
+            <iframe src="https://player.vimeo.com/video/59699220?h=c39a90bff1&autoplay=1" width="1300" height="731" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+            <p>&quot;Dance Contest&quot; &copy; 2013 is a cartoon I made with music by the very good Izaak Thompson (http://vonneumannarchitecture.bandcamp.com/)</p>
         }
-    </div>
+    else
+    {
+        <div class="row">
+                
+                @foreach (var question in _game!)
+                {
+                    <div class="col">
+                        <br/>
+                        <Question Q="question" DidAnswer="ResolveResult"/>
+                        <br/>
+                    </div>
+                }
+            </div>
+    }
 </div>
 
 
 @code{
     
     private List<GameDataHelper.Game>? _game;
-    private const int NumberOfQuestions = 30;
+    private const int NumberOfQuestions = 10;
     private int _score = 0;
 
     protected override void OnInitialized()

@@ -68,8 +68,8 @@ public class GameDataHelper
         }
         catch
         {
-            (distractedItems as List<string>)!.Add("True");
-            (distractedItems as List<string>)!.Add("False");
+            distractedItems!.Add("True");
+            distractedItems!.Add("False");
             return Shuffle(distractedItems.Distinct().ToList());
         }
     }
