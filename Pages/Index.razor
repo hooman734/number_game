@@ -7,7 +7,7 @@
     <br/>
     <h1>Vihan Number Game!</h1>
     <br/>
-    <h4>Your Score is : @_score / @NumberOfQuestions</h4>
+    <h4>Your Score is : @_score / @NumberOfQuestions - Goal is @(Threshold * NumberOfQuestions)</h4>
     <br/>
     <HxButton OnClickPreventDefault="false" Color="ThemeColor.Success" Icon="BootstrapIcon.Award" OnClick="Refresh">Refresh!</HxButton>
     <br/>
@@ -37,7 +37,7 @@
 @code{
     
     private const int NumberOfQuestions = 15;
-    private const float Threshold = 0.8F;
+    private const float Threshold = 0.6F;
     private const int Limit = 15;
     private const int NumberOfOtherQuestions = 4;
     
