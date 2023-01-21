@@ -1,21 +1,35 @@
 
 <Ding Correct="_correct" Incorrect="_incorrect"/>
 
-<HxCard CssClass="@_theme" style="max-width: 18rem;">
+<HxCard CssClass="@_theme" style="min-width: 18rem;">
     <HeaderTemplate>
          <h3><span>@Q.Operands.Item1</span> @(Q.Op == GameDataHelper.Op.Add ? '+' : (Q.Op == GameDataHelper.Op.Sub ? '-' : (Q.Op == GameDataHelper.Op.Greater ? '>' : '<'))) <span>@Q.Operands.Item2</span> = @(_tried ? Q.Answer : '?')</h3>
     </HeaderTemplate>
-	<BodyTemplate>
-		<div class="container">
-            <h6>Answers:</h6>
-            <HxButtonGroup>
-                @foreach (var option in Q.Options!)
-                {
-                    <HxButton OnClickStopPropagation="true" OnClickPreventDefault="true" Size="ButtonSize.Large" Text="@option" Color="ThemeColor.Light" Outline="false" OnClick="() => IfWins(option, Q.Answer)"/>
-                }
-            </HxButtonGroup>
-        </div>
-	</BodyTemplate>
+    <BodyTemplate>
+        @if (!_tried)
+        {
+            <div class="container">
+                <h6>Answers:</h6>
+                <HxButtonGroup>
+                    @foreach (var option in Q.Options!)
+                    {
+                        <HxButton OnClickStopPropagation="true" OnClickPreventDefault="true" Size="ButtonSize.Large" Text="@option" Color="ThemeColor.Light" Outline="false" OnClick="() => IfWins(option, Q.Answer)"/>
+                    }
+                </HxButtonGroup>
+            </div>
+        }
+        else
+        {
+            if (_correct)
+            {
+                <h1><HxIcon Icon="BootstrapIcon.HandThumbsUp" /></h1>
+            }
+            else
+            {
+                <h1><HxIcon Icon="BootstrapIcon.HandThumbsDown" /></h1>
+            }
+        }
+    </BodyTemplate>
 </HxCard>
 
 @code {
