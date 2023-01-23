@@ -3,71 +3,101 @@
 @inject NavigationManager NavigationManager
 
 
-<div class="container" xmlns="http://www.w3.org/1999/html">
-    <br/>
-        <h1>Vihan Number Game!</h1>
-    <br/>
+<div class="container">
     <div class="row">
-        <div class="col">
-            <h4>Your Score is : @_score / @NumberOfQuestions - Goal is @(Math.Floor(_threshold * NumberOfQuestions))</h4>
-        </div>
-        <div class="col">
-            
-        </div>
-        <div class="col-3">
-            <div class="row">
-                <div class="col">
-                    <HxSelect TItem="string"
-                              TValue="string"
-                              AutoSort="false"
-                              Data="@_difficultyOptions"
-                              Value="@_difficulty"
-                              ValueExpression="() => _difficulty"
-                              Nullable="false"
-                              ValueChanged="SelectDifficulty"/>
+        <br/>
+        <h1 class="fw-bold display-1 text-center text-white opacity-75">Vihan Number Game!</h1>
+        <br/>
+        <h4 class="text-white opacity-75 text-center">Your Score is <span class="badge bg-secondary fw-bold">@_score / @NumberOfQuestions</span> The Goal is To Achieve <span class="badge bg-secondary fw-bold">@(Math.Floor(_threshold * NumberOfQuestions))</span></h4>
+        <br/>
+        <div class="d-flex justify-content-around">
+            <div>
+                <HxSelect
+                    TItem="string"
+                    TValue="string"
+                    AutoSort="false"
+                    Data="@_difficultyOptions"
+                    Value="@_difficulty"
+                    ValueExpression="() => _difficulty"
+                    Nullable="false"
+                    ValueChanged="SelectDifficulty"
+                    CssClass="ms-2"
+                    InputCssClass="fw-bold"
+                />
                     
-                </div>
-                <div class="col">
-                    <HxButton OnClickPreventDefault="false" Color="ThemeColor.Success" Icon="BootstrapIcon.Award" OnClick="Refresh">Refresh!</HxButton>
-                </div>
-                </div>
+            </div>
+            <div>
+                <HxButton OnClickPreventDefault="false" Color="ThemeColor.Secondary" Icon="BootstrapIcon.ArrowCounterclockwise" OnClick="Refresh">Refresh!</HxButton>
+            </div>
         </div>
     </div>
-    <br/>
-    <br/>
-    @if (_score > _threshold * NumberOfQuestions)
-    {
-        <iframe src="https://player.vimeo.com/video/59699220?h=c39a90bff1&autoplay=1" width="1300" height="731" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-        <p>&quot;Dance Contest&quot; &copy; 2013 is a cartoon I made with music by the very good Izaak Thompson (http://vonneumannarchitecture.bandcamp.com/)</p>
-    }
-    else
-    {
-        <div class="row">
-
-            @foreach (var question in _game!)
-            {
-                <div class="col">
-                    <br/>
-                    <Question Q="question" DidAnswer="ResolveResult"/>
-                    <br/>
-                </div>
-            }
+    <div class="row">
+        <div class="col-1" style="width: 6rem; min-height: 100vh;">
+            <div style="position: fixed; left: 0;">
+                @if (_started && _didAnswerRight)
+                    {
+                        <video autoplay muted loop width="200" style="z-index: 2">
+                            <source src="Videos/yes_video.webm" type="video/webm">
+                            Your browser does not support HTML video.
+                        </video>
+                    }
+                    @if (_started && !_didAnswerRight)
+                    {
+                        <video autoplay muted loop width="200">
+                            <source src="Videos/no_video.webm" type="video/webm">
+                            Your browser does not support HTML video.
+                        </video>
+        
+                    }
+            </div>
         </div>
-    }
+        <div class="col">
+             @if (_score > _threshold * NumberOfQuestions)
+                {
+                    <div class="row mt-3 shadow-lg rounded">
+                        <video loop muted autoplay style="min-width: 100%; min-height: 100%; z-index: 2;">
+                            <source src="Videos/firework.mp4" type="video/mp4"/>
+                        </video>
+                        
+                    </div>
+                    <audio loop autoplay>
+                        <source src="Sounds/firework.wav" type="audio/wav"/>
+                    </audio>
+                    <audio loop autoplay>
+                        <source src="Sounds/applause.wav" type="audio/wav"/>
+                    </audio>
+                }
+                else
+                {
+                    <div class="row">
+                        @foreach (var question in _game!)
+                        {
+                            <div class="col">
+                                <br/>
+                                <Question Q="question" DidAnswer="ResolveResult"/>
+                                <br/>
+                            </div>
+                        }
+                    </div>
+                }
+        </div>
+    </div>
 </div>
 
 
 @code{
     
     private const int NumberOfQuestions = 20;
-    private const int Limit = 15;
-    private const int NumberOfOtherQuestions = 4;
+    private const int Limit = 17;
+    private const int NumberOfOtherQuestions = 5;
 
     private string? _difficulty;
     private float _threshold = 0.55F;
     private List<GameDataHelper.Game>? _game;
     private int _score;
     private List<string>? _difficultyOptions;
+    private bool _started;
+    private bool _didAnswerRight;
     
     
     private void SelectDifficulty(string? difficulty)
@@ -80,13 +110,14 @@
             "Difficult" => 0.88F,
             _ => 1.0F
         };
+        _difficulty = difficulty;
     }
     
     protected override void OnInitialized()
     {
         GameDataHelper.Setup(Limit, NumberOfOtherQuestions);
         _game = GameDataHelper?.MakeQuestion(NumberOfQuestions)?.ToList();
-        _difficultyOptions = new List<string>{ "Super Easy", "Easy", "Medium", "Difficult" };
+        _difficultyOptions = new List<string>{ @"Super Easy", @"Easy", @"Medium", @"Difficult" };
         _difficulty = "Easy";
     }
 
@@ -97,9 +128,15 @@
 
     private void ResolveResult(bool r)
     {
+        _started = true;
         if (r)
         {
+            _didAnswerRight = true;
             _score++;
+        }
+        else
+        {
+            _didAnswerRight = false;
         }
     }
 }

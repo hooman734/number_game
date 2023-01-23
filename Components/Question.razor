@@ -40,7 +40,7 @@
     public EventCallback<bool> DidAnswer { get; set; }
     
     private bool _correct = false, _incorrect = false;
-    private string _theme = "bg-primary  text-white mb-3";
+    private string _theme = "bg-dark opacity-75 text-white mb-3 shadow-lg rounded";
     private bool _tried = false;
 
     private async Task IfWins(string answer, string check)
@@ -50,13 +50,13 @@
         if (answer == check)
         {
             _correct = true;
-            _theme = "bg-success text-white mb-3";
+            _theme = "bg-success opacity-50 text-white mb-3 shadow-lg rounded";
             await DidAnswer.InvokeAsync(true);
         }
         else
         {
             _incorrect = true;
-            _theme = "bg-danger text-white mb-3";
+            _theme = "bg-danger opacity-50 text-white mb-3 shadow-lg rounded";
             await DidAnswer.InvokeAsync(false);
         }
     }

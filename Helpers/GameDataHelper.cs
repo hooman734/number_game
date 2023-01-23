@@ -96,10 +96,10 @@ public class GameDataHelper
             var seed = (new Random()).Next(20);
             var operation = (new Random().Next(16)) switch
             {
-                <= 5 => Op.Greater,
-                <= 8 => Op.Smaller,
-                <= 11 => Op.Sub,
-                _  => Op.Add,
+                <= 3 => Op.Greater,
+                <= 8 => Op.Add,
+                <= 13 => Op.Sub,
+                _  => Op.Smaller,
             };
             var (operand1, operand2, answer) = OperandGenerator(operation, seed);
             yield return new Game { Operands = (operand1, operand2), Answer = answer, Op = operation, Options = AnswerOptions(answer) };   

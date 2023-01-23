@@ -23,4 +23,8 @@
     <None Include="wwwroot\Sounds\incorrect.wav" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Folder Include="wwwroot\Videos" />
+  </ItemGroup>
+  
 </Project>
