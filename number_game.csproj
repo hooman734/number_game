@@ -14,15 +14,10 @@
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <StaticWebAssetBasePath>wwwroot/Sound</StaticWebAssetBasePath>
-  </PropertyGroup>
   
   <ItemGroup>
-    <None Include="wwwroot\Sounds\applause.wav" />
-    <None Include="wwwroot\Sounds\incorrect.wav" />
+    <Folder Include="wwwroot\Sounds" />
   </ItemGroup>
-  
   <ItemGroup>
     <Folder Include="wwwroot\Videos" />
   </ItemGroup>
