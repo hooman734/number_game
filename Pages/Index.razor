@@ -36,18 +36,23 @@
             <div style="position: fixed; left: 0;">
                 @if (_started && _didAnswerRight)
                     {
-                        <video autoplay muted loop width="200" style="z-index: 2">
-                            <source src="Videos/yes_video.webm" type="video/webm">
-                            Your browser does not support HTML video.
-                        </video>
+                        <div style="position: relative">
+                            <video autoplay muted loop width="200" style="z-index: 2">
+                                <source src="Videos/yes_video.webm" type="video/webm">
+                                Your browser does not support HTML video.
+                            </video>
+                            <span style="position: absolute; right: 0; top: 0;" class="badge bg-secondary fw-bold">@_score / @NumberOfQuestions</span>
+                        </div>
                     }
                     @if (_started && !_didAnswerRight)
                     {
-                        <video autoplay muted loop width="200">
-                            <source src="Videos/no_video.webm" type="video/webm">
-                            Your browser does not support HTML video.
-                        </video>
-        
+                        <div style="position: relative">
+                            <video autoplay muted loop width="200">
+                                <source src="Videos/no_video.webm" type="video/webm">
+                                Your browser does not support HTML video.
+                            </video>
+                            <span style="position: absolute; right: 0; top: 0;" class="badge bg-secondary fw-bold">@_score / @NumberOfQuestions</span>
+                        </div>
                     }
             </div>
         </div>
