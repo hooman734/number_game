@@ -21,5 +21,10 @@
   <ItemGroup>
     <Folder Include="wwwroot\Videos" />
   </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="release\web.config" />
+    <_ContentIncludedByDefault Remove="release\release\wwwroot\_framework\blazor.boot.json" />
+    <_ContentIncludedByDefault Remove="release\wwwroot\_framework\blazor.boot.json" />
+  </ItemGroup>
   
 </Project>
